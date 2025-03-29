@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Cliente</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Atualizar Cliente</h1>
+        <nav>
+            <a href="clientes.html">Voltar para a lista de Clientes</a>
+        </nav>
+    </header>
+
+    <form id="form-atualizar-cliente" onsubmit="event.preventDefault(); atualizarCliente();">
+        <input type="text" id="cliente-nome" placeholder="Nome" value="" required>
+        <input type="text" id="cliente-sobrenome" placeholder="Sobrenome" value="" required>
+        <input type="email" id="cliente-email" placeholder="Email" value="" required>
+        <input type="number" id="cliente-idade" placeholder="Idade" value="" required>
+        <button type="submit" class="button">Atualizar Cliente</button>
+    </form>
+
+    <script src="clientes.js"></script>
+</body>
+</html>

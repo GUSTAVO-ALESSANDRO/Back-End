@@ -1,0 +1,142 @@
+/* Resetando alguns estilos padrões */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+header {
+    background-color: #3b8ea5;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.1rem;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form button {
+    background-color: #3b8ea5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: #2a6d83;
+}
+
+nav {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#clientes-container, #produtos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+#clientes-container div, #produtos-container div {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#clientes-container div h3, #produtos-container div h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+#clientes-container div p, #produtos-container div p {
+    font-size: 1rem;
+    color: #555;
+}
+
+#clientes-container div button, #produtos-container div button {
+    background-color: #3b8ea5;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#clientes-container div button:hover, #produtos-container div button:hover {
+    background-color: #2a6d83;
+}
+
+#produtos-container div, #clientes-container div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#produtos-container div .actions, #clientes-container div .actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+#produtos-container div button, #clientes-container div button {
+    align-self: flex-end;
+}
+
+.editar, .excluir {
+    height: 35px;
+    width: 80px;
+}

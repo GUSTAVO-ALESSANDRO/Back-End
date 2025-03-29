@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Produto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Atualizar Produto</h1>
+        <nav>
+            <a href="produtos.html">Voltar para a lista de Produtos</a>
+        </nav>
+    </header>
+
+    <form id="form-atualizar-produto" onsubmit="event.preventDefault(); atualizarProduto();">
+        <input type="text" id="produto-nome" placeholder="Nome" value="" required>
+        <input type="text" id="produto-descricao" placeholder="Descrição" value="" required>
+        <input type="text" id="produto-preco" placeholder="Preço" value="" required>
+        <button type="submit" class="button">Atualizar Produto</button>
+    </form>
+
+    <script src="produtos.js"></script>
+</body>
+</html>

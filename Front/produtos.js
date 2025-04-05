@@ -6,6 +6,17 @@ if (document.getElementById("produtos-container")) {
   renderizarProdutos();
 }
 
+// Função para formatar a data no formato dd/mm/aaaa hh:mm
+function formatarData(dataISO) {
+    const data = new Date(dataISO);
+    const dia = data.getDate().toString().padStart(2, '0');
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+    const ano = data.getFullYear();
+    const horas = data.getHours().toString().padStart(2, '0');
+    const minutos = data.getMinutes().toString().padStart(2, '0');
+    return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}
+
 // Função para renderizar a lista de produtos
 async function renderizarProdutos() {
   try {
@@ -29,6 +40,7 @@ async function renderizarProdutos() {
                     <strong>Nome:</strong> ${produto.nome} <br>
                     <strong>Descrição:</strong> ${produto.descricao} <br>
                     <strong>Preço:</strong> R$ ${produto.preco} <br>
+                    <strong>Última Atualização:</strong> ${formatarData(produto.data_atualizado)} <br>
                 </div>
                 <div class="actions">
                     <button class="editar" onclick='editarProduto(${JSON.stringify(

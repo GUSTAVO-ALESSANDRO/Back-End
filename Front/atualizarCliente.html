@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Atualizar Cliente</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Atualizar Cliente</h1>
-        <nav>
-            <a href="clientes.html">Voltar para a lista de Clientes</a>
-        </nav>
+      <h1>Atualizar Cliente</h1>
+      <nav>
+        <a href="clientes.html">Voltar para a lista de Clientes</a>
+      </nav>
     </header>
 
     <form id="form-atualizar-cliente" onsubmit="event.preventDefault(); atualizarCliente();">
-        <input type="text" id="cliente-nome" placeholder="Nome" value="" required>
-        <input type="text" id="cliente-sobrenome" placeholder="Sobrenome" value="" required>
-        <input type="email" id="cliente-email" placeholder="Email" value="" required>
-        <input type="number" id="cliente-idade" placeholder="Idade" value="" required>
-        <button type="submit" class="button">Atualizar Cliente</button>
+      <label>ID</label>
+      <div class="cliente-id" id="cliente-id"></div>
+
+      <label>Nome</label>
+      <input type="text" id="cliente-nome" placeholder="Nome" />
+      <div class="erro-msg" id="erro-nome"></div>
+
+      <label>Sobrenome</label>
+      <input type="text" id="cliente-sobrenome" placeholder="Sobrenome" />
+      <div class="erro-msg" id="erro-sobrenome"></div>
+
+      <label>Email</label>
+      <input type="text" id="cliente-email" placeholder="Email" />
+      <div class="erro-msg" id="erro-email"></div>
+
+      <label>Idade</label>
+      <input type="text" id="cliente-idade" placeholder="Idade" />
+      <div class="erro-msg" id="erro-idade"></div>
+
+      <button type="submit" class="button">Atualizar Cliente</button>
     </form>
 
     <script src="clientes.js"></script>
-</body>
+  </body>
 </html>

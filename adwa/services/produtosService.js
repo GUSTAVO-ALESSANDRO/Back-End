@@ -15,7 +15,7 @@ exports.create = async (produto) => {
     const [result] = await db.query(
         // Insere os dados do produto no banco.
         'INSERT INTO produtos (nome, descricao, preco) VALUES (?, ?, ?)',
-        [nome, descricao, preco], // Valores fornecidos à consulta.
+        [nome, descricao, preco],
     );
     // Retorna os dados do produto com o ID gerado.
     return { id: result.insertId, ...produto };

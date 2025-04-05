@@ -15,10 +15,18 @@
     </header>
 
     <form id="form-adicionar-cliente" onsubmit="event.preventDefault(); criarCliente();">
-        <input type="text" id="cliente-nome" placeholder="Nome" required>
-        <input type="text" id="cliente-sobrenome" placeholder="Sobrenome" required>
-        <input type="email" id="cliente-email" placeholder="Email" required>
-        <input type="number" id="cliente-idade" placeholder="Idade" required>
+        <input type="text" id="cliente-nome" placeholder="Nome" >
+        <div class="erro-msg" id="erro-nome"></div>
+
+        <input type="text" id="cliente-sobrenome" placeholder="Sobrenome" >
+        <div class="erro-msg" id="erro-sobrenome"></div>
+
+        <input type="text" id="cliente-email" placeholder="Email" >
+        <div class="erro-msg" id="erro-email"></div>
+
+        <input type="text" id="cliente-idade" placeholder="Idade" >
+        <div class="erro-msg" id="erro-idade"></div>
+
         <button type="submit" class="button">Adicionar Cliente</button>
     </form>
 

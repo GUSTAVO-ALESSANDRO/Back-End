@@ -1,33 +1,34 @@
-/**
- * Middleware para validar os dados da entidade "Cliente".
- * Garante que os campos obrigatórios sejam preenchidos corretamente.
- */
-
 module.exports.validarCliente = (req, res, next) => {
     const { nome, sobrenome, email, idade } = req.body;
+    const erros = {};
 
-    // Verifica se "nome" está presente e se é uma string válida
+    // Validação de nome
     if (!nome || typeof nome !== 'string') {
-        return res.status(400).json({ erro: 'Nome inválido' });
+        erros.nome = 'Nome inválido';
     }
 
-    // Verifica se "sobrenome" está presente e se é uma string válida
+    // Validação de sobrenome
     if (!sobrenome || typeof sobrenome !== 'string') {
-        return res.status(400).json({ erro: 'Sobrenome inválido' });
+        erros.sobrenome = 'Sobrenome inválido';
     }
 
-    // Valida o formato do e-mail usando uma expressão regular
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        return res.status(400).json({ erro: 'E-mail inválido' });
+    // Validação de email
+    if (!email) {
+        erros.email = 'E-mail é obrigatório';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+        erros.email = 'E-mail inválido';
     }
 
-    // Converte "idade" para número e verifica se é válido
-    if (!idade || isNaN(Number(idade)) || Number(idade) <= 0) {
-        return res.status(400).json(
-            { erro: 'Idade deve ser um número válido e maior que zero' });
+    // Validação de idade
+    if (!idade) {
+        erros.idade = 'Idade é obrigatória';
+    } else if (isNaN(Number(idade)) || Number(idade) <= 0) {
+        erros.idade = 'Idade deve ser um número válido e maior que zero';
     }
 
-    // Se todos os dados forem válidos, passa para
-    // o próximo middleware ou controller
+    if (Object.keys(erros).length > 0) {
+        return res.status(400).json(erros);
+    }
+
     next();
 };

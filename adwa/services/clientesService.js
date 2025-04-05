@@ -14,9 +14,9 @@ exports.create = async (cliente) => {
     const { nome, sobrenome, email, idade } = cliente;
     const [result] = await db.query(
         // Consulta para inserir os dados no banco.
-        'INSERT INTO clientes (nome, sobrenome, email, idade)'+
-        ' VALUES (?, ?, ?, ?)',
-        [nome, sobrenome, email, idade], // Valores fornecidos na consulta.
+        'INSERT INTO clientes (nome, sobrenome, email, idade)' +
+            ' VALUES (?, ?, ?, ?)',
+        [nome, sobrenome, email, idade],
     );
     // Retorna os dados do cliente com o ID gerado.
     return { id: result.insertId, ...cliente };
@@ -28,8 +28,8 @@ exports.update = async (id, cliente) => {
     const { nome, sobrenome, email, idade } = cliente;
     const [result] = await db.query(
         // Atualiza os campos do cliente.
-        'UPDATE clientes SET nome = ?, sobrenome = ?, email= ?,'+
-        'idade = ? WHERE id = ?',
+        'UPDATE clientes SET nome = ?, sobrenome = ?, email= ?,' +
+            'idade = ? WHERE id = ?',
         // Valores fornecidos na consulta, incluindo o ID.
         [nome, sobrenome, email, idade, id],
     );

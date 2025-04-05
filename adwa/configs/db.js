@@ -16,6 +16,8 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD,
     // O nome do banco de dados que será utilizado, definido em DB_NAME.
     database: process.env.DB_NAME,
+    // A porta que sera utilizada
+    port: process.env.DB_PORT,
 });
 
 // Exporta o pool de conexões como uma promessa para

@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Produto</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Adicionar Produto</h1>
-        <nav>
-            <a href="produtos.html">Voltar para a lista de Produtos</a>
-        </nav>
+      <h1>Adicionar Produto</h1>
+      <nav>
+        <a href="produtos.html">Voltar para a lista de Produtos</a>
+      </nav>
     </header>
 
     <form id="form-adicionar-produto" onsubmit="event.preventDefault(); criarProduto();">
-        <input type="text" id="produto-nome" placeholder="Nome" required>
-        <input type="text" id="produto-descricao" placeholder="Descrição" required>
-        <input type="text" id="produto-preco" placeholder="Preço" required>
+      <input type="text" id="produto-nome" placeholder="Nome" />
+      <div class="erro-msg" id="erro-nome"></div>
+
+      <input type="text" id="produto-descricao" placeholder="Descrição" />
+      <div class="erro-msg" id="erro-descricao"></div>
+      
+      <input type="text" id="produto-preco" placeholder="Preço" />
+      <div class="erro-msg" id="erro-preco"></div>
+      
         <button type="submit" class="button">Adicionar Produto</button>
     </form>
 
     <script src="produtos.js"></script>
-</body>
+  </body>
 </html>

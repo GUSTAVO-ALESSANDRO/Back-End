@@ -1,5 +1,5 @@
 module.exports.validarProduto = (req, res, next) => {
-    const { nome, descricao, preco, } = req.body;
+    const { nome, descricao, preco } = req.body;
     const erros = {};
 
     // Validação de nome

@@ -13,6 +13,16 @@ const clientesRoutes = require('./routes/clientesRoutes');
 // Importa as rotas relacionadas a "produtos".
 const produtosRoutes = require('./routes/produtosRoutes');
 
+//const indexRouter = require('./routes/index');
+
+//const usersRouter = require('./routes/users');
+
+const loginRouter = require('./routes/loginRouter');
+
+const logoutRouter = require('./routes/logoutRouter');
+
+const protectedRouter = require('./routes/protectedRouter');
+
 // Cria a instância do aplicativo Express.
 const app = express();
 
@@ -25,11 +35,23 @@ app.use(cors());
 // Middleware para analisar JSON nas requisições.
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 // Define as rotas de clientes com prefixo "/clientes".
 app.use('/clientes', clientesRoutes);
 
 // Define as rotas de produtos com prefixo "/produtos".
 app.use('/produtos', produtosRoutes);
+
+//app.use('/', indexRouter);
+
+//app.use('/users', usersRouter);
+
+app.use('/login', loginRouter);
+
+app.use('/logout', logoutRouter);
+
+app.use('/protegido', protectedRouter);
 
 // Rota padrão para o caminho raiz.
 app.get('/', (req, res) => {

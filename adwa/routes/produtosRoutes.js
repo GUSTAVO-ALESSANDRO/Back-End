@@ -4,9 +4,10 @@ const router = express.Router(); // Cria um roteador para gerenciar as rotas.
 const produtosController = require('../controllers/produtosController');
 // Importa o middleware de validação
 const { validarProduto } = require('../middlewares/validarProduto');
+const { cacheMiddlewares } = require('../middlewares/cacheMiddleware');
 
 // Rota para obter todos os produtos (método GET)
-router.get('/', produtosController.getProdutos);
+router.get('/', cacheMiddlewares, produtosController.getProdutos);
 
 // Rota para criar um novo produto (método POST)
 router.post('/', validarProduto, produtosController.createProduto);

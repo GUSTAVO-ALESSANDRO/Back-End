@@ -1,45 +1,46 @@
-// Importa os serviços que contêm a lógica de negócios da entidade "produtos".
 const produtosService = require('../services/produtosService');
+const cache = require('../cache/cache');
 
-// Controlador para obter todos os produtos.
+// Controlador para obter todos os produtos (com caching dinâmico)
 exports.getProdutos = async (req, res) => {
-    if (!req.body) {
-        return res
-            .status(404)
-            .json({ message: 'Não foram encontrados produtos.' });
+    const chaveCache = `"${req.originalUrl}"`; // Usa apenas a parte fixa da URL
+    const produtosCache = cache.get(chaveCache);
+
+    if (produtosCache) {
+        console.log("[CACHE] Produtos recuperados do cache.");
+        return res.status(200).json(produtosCache);
     }
+
     try {
-        // Obtém a lista de produtos através do serviço.
         const produtos = await produtosService.getAll();
-        // Retorna os produtos em formato JSON.
+        cache.set(chaveCache, produtos, 30); // Armazena no cache por 30 segundos
+        console.log("[DB] Produtos recuperados do banco e armazenados no cache.");
         res.status(200).json(produtos);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-// Controlador para criar um novo produto.
+// Controlador para criar um novo produto (invalida apenas o cache relacionado)
 exports.createProduto = async (req, res) => {
-    // Recebe os dados do produto a partir do corpo da requisição.
     const produto = req.body;
     if (!produto) {
         return res.status(400).json({ error: 'Nenhum produto encontrado.' });
     }
+
     try {
-        // Chama o serviço para criar o produto.
         const result = await produtosService.create(produto);
-        // Retorna o produto criado com o status HTTP 201 (Criado).
+        const chaveCache = `"${req.originalUrl}"`;
+        cache.del(chaveCache); // Invalida apenas o cache relacionado ao endpoint atual
         res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-// Controlador para atualizar um produto existente.
+// Controlador para atualizar um produto existente (invalida cache dinamicamente)
 exports.updateProduto = async (req, res) => {
-    // Obtém o ID do produto dos parâmetros da requisição.
     const { id } = req.params;
-    // Recebe os dados atualizados do produto no corpo da requisição.
     const produto = req.body;
 
     if (!produto || !id) {
@@ -47,34 +48,27 @@ exports.updateProduto = async (req, res) => {
     }
 
     try {
-        // Atualiza o produto chamando o serviço.
         const result = await produtosService.update(id, produto);
-        res.status(201).json({
-            message: 'Produto atualizado com sucesso!',
-            result,
-        });
+        const chaveCache = `"${req.originalUrl}"`;
+        cache.del(chaveCache); // Invalida apenas o cache da rota atual
+        res.status(201).json({ message: 'Produto atualizado com sucesso!', result });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-// Controlador para deletar um produto.
+// Controlador para deletar um produto (invalida cache dinamicamente)
 exports.deleteProduto = async (req, res) => {
-    // Obtém o ID do produto dos parâmetros da requisição.
     const { id } = req.params;
-
     if (!id) {
         return res.status(400).json({ error: 'Produto não encontrado' });
     }
 
     try {
-        // Chama o serviço para deletar o produto.
         const result = await produtosService.delete(id);
-        // Retorna o resultado da operação de exclusão.
-        res.status(201).json({
-            message: 'Produto deletado com sucesso!',
-            result,
-        });
+        const chaveCache = `"${req.originalUrl}"`;
+        cache.del(chaveCache.substring(0, chaveCache.lastIndexOf('/'))+'"'); // Invalida apenas o cache da rota atual
+        res.status(201).json({ message: 'Produto deletado com sucesso!', result });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

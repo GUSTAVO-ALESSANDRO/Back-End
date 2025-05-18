@@ -3,9 +3,10 @@ const router = express.Router();
 const clientesController = require('../controllers/clientesController');
 const { validarCliente } = require('../middlewares/validarCliente');
 const verifyJWT = require('../middlewares/verifyJWT');
+const { cacheMiddlewares } = require('../middlewares/cacheMiddleware');
 
 // Rota para obter todos os clientes (método GET)
-router.get('/', verifyJWT, clientesController.getClientes);
+router.get('/', verifyJWT, cacheMiddlewares, clientesController.getClientes);
 
 // Rota para criar um novo cliente (método POST)
 router.post('/', verifyJWT, validarCliente, clientesController.createCliente);

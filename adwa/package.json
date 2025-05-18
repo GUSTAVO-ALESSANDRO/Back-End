@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.14.0"
+    "mysql2": "^3.14.0",
+    "node-cache": "^5.1.2"
   },
   "devDependencies": {
     "eslint": "^8.57.1",

@@ -1,20 +1,22 @@
 const clientesService = require('../services/clientesService');
 const cache = require('../cache/cache');
 
+const chalk = require('chalk');
+
 // Controlador para obter todos os clientes
 exports.getClientes = async (req, res) => {
     const chaveCache = `"${req.originalUrl}"`;
     const clientesCache = cache.get(chaveCache);
 
     if (clientesCache) {
-        console.log("[CACHE] Clientes recuperados do cache.");
+        console.log(chalk.green("[CACHE] Clientes recuperados do cache."));
         return res.status(200).json(clientesCache);
     }
 
     try {
         const clientes = await clientesService.getAll();
         cache.set(chaveCache, clientes, 30);
-        console.log("[DB] Clientes recuperados do banco e armazenados no cache.");
+        console.log(chalk.red("[DB] Clientes recuperados do banco e armazenados no cache."));
         res.status(200).json(clientes);
     } catch (error) {
         res.status(400).json({ error: error.message });

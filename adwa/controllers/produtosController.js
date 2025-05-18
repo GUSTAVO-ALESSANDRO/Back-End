@@ -1,20 +1,22 @@
 const produtosService = require('../services/produtosService');
 const cache = require('../cache/cache');
 
+const chalk = require('chalk');
+
 // Controlador para obter todos os produtos (com caching dinâmico)
 exports.getProdutos = async (req, res) => {
     const chaveCache = `"${req.originalUrl}"`; // Usa apenas a parte fixa da URL
     const produtosCache = cache.get(chaveCache);
 
     if (produtosCache) {
-        console.log("[CACHE] Produtos recuperados do cache.");
+        console.log(chalk.green("[CACHE] Produtos recuperados do cache."));
         return res.status(200).json(produtosCache);
     }
 
     try {
         const produtos = await produtosService.getAll();
         cache.set(chaveCache, produtos, 30); // Armazena no cache por 30 segundos
-        console.log("[DB] Produtos recuperados do banco e armazenados no cache.");
+        console.log(chalk.red("[DB] Produtos recuperados do banco e armazenados no cache."));
         res.status(200).json(produtos);
     } catch (error) {
         res.status(400).json({ error: error.message });

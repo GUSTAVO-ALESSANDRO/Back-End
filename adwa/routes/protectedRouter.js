@@ -6,4 +6,4 @@ router.get('/', verifyJWT, function(req, res) {
     res.send('Você acessou uma rota protegida! Seu id: ' + req.id);
 });
 
-module.exports = router; 
+module.exports = router;

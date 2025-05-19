@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../configs/db');
 require('dotenv').config();
 
+const bcrypt = require('bcrypt');
 const secret = process.env.SECRET;
 
 exports.autenticar = async (user, password) => {
@@ -14,7 +15,9 @@ exports.autenticar = async (user, password) => {
         throw new Error('Usuário não encontrado');
     }
 
-    if (usuario.senha !== password) {
+    // Compara a senha fornecida com o hash armazenado
+    const senhaValida = await bcrypt.compare(password, usuario.senha);
+    if (!senhaValida) {
         throw new Error('Senha incorreta');
     }
 

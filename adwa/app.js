@@ -13,10 +13,6 @@ const clientesRoutes = require('./routes/clientesRoutes');
 // Importa as rotas relacionadas a "produtos".
 const produtosRoutes = require('./routes/produtosRoutes');
 
-//const indexRouter = require('./routes/index');
-
-//const usersRouter = require('./routes/users');
-
 const loginRouter = require('./routes/loginRouter');
 
 const logoutRouter = require('./routes/logoutRouter');
@@ -42,10 +38,6 @@ app.use('/clientes', clientesRoutes);
 
 // Define as rotas de produtos com prefixo "/produtos".
 app.use('/produtos', produtosRoutes);
-
-//app.use('/', indexRouter);
-
-//app.use('/users', usersRouter);
 
 app.use('/login', loginRouter);
 

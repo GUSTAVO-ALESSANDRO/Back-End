@@ -212,6 +212,4 @@ Você pode testar os endpoints utilizando ferramentas como [Postman](https://www
   - Integração completa entre front-end e back-end (suporte ao fluxo de autenticação no front).
   - Implementação de testes automatizados.
   - Funcionalidades adicionais, como paginação, filtros dinâmicos, dentre outras.
-- Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests para sugerir melhorias.
-- 
 ---

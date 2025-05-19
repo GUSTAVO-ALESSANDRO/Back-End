@@ -19,6 +19,8 @@ const logoutRouter = require('./routes/logoutRouter');
 
 const protectedRouter = require('./routes/protectedRouter');
 
+const usuariosRoutes = require('./routes/usuariosRoutes');
+
 // Cria a instância do aplicativo Express.
 const app = express();
 
@@ -44,6 +46,8 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 
 app.use('/protegido', protectedRouter);
+
+app.use('/usuarios', usuariosRoutes);
 
 // Rota padrão para o caminho raiz.
 app.get('/', (req, res) => {

@@ -23,3 +23,15 @@ exports.getAll = async () => {
     const [rows] = await db.query('SELECT id, usuario FROM usuarios');
     return rows;
 };
+
+exports.delete = async (id) => {
+    // Verifica se o usuário existe
+    const [existingUser] =
+        await db.query('SELECT * FROM usuarios WHERE id = ?', [id]);
+    if (!existingUser || existingUser.length === 0) {
+        throw new Error('Usuário não encontrado.');
+    }
+    // Deleta o usuário
+    await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
+    return { message: 'Usuário deletado com sucesso!', deletedId: id };
+};

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const db = require('../configs/db');
 require('dotenv').config();
-const SECRET = process.env.SECRET;
+const SECRET = process.env.SECRET || 'chave-secreta-padrao';
 
 // Necessario para o lint:
 /**
@@ -12,12 +13,31 @@ const SECRET = process.env.SECRET;
  */
 function verifyJWT(req, res, next) {
     const token = req.headers['x-access-token'];
-    if (!token) return res.status(401).end();
+    if (!token) {
+        return res.status(401).json({ error: 'Token não fornecido' });
+    }
 
-    jwt.verify(token, SECRET, (err, decoded) => {
-        if (err) return res.status(401).end();
-        req.id = decoded.id;
-        next();
+    jwt.verify(token, SECRET, async (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: 'Token inválido' });
+        }
+
+        // Verifica se o token ainda existe no banco
+        try {
+            const [usuarios] = await db.query(
+                'SELECT token FROM usuarios WHERE id = ?', [decoded.id]);
+
+            if (!usuarios[0] || usuarios[0].token !== token) {
+                return res.status(401).json({
+                    error: 'Token inválido ou expirado' });
+            }
+
+            req.userId = decoded.id;
+            next();
+        } catch (dbError) {
+            return res.status(401)
+                .json({ error: 'Erro na validação do token' });
+        }
     });
 }
 

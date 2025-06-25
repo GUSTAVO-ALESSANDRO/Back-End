@@ -11,34 +11,42 @@ exports.getAll = async () => {
 // Serviço para criar um novo produto.
 exports.create = async (produto) => {
     // Desestrutura os dados do produto recebido.
-    const { nome, descricao, preco } = produto;
-    const [result] = await db.query(
-        // Insere os dados do produto no banco.
-        'INSERT INTO produtos (nome, descricao, preco) VALUES (?, ?, ?)',
-        [nome, descricao, preco],
-    );
-    // Retorna os dados do produto com o ID gerado.
+    const { nome, descricao, preco, dataAtualizado } = produto;
+    let query;
+    let params;
+    if (dataAtualizado) {
+        query = 'INSERT INTO produtos '+
+            '(nome, descricao, preco, dataAtualizado) VALUES (?, ?, ?, ?)';
+        params = [nome, descricao, preco, dataAtualizado];
+    } else {
+        query = 'INSERT INTO produtos ' +
+            '(nome, descricao, preco) VALUES (?, ?, ?)';
+        params = [nome, descricao, preco];
+    }
+    const [result] = await db.query(query, params);
     return { id: result.insertId, ...produto };
 };
 
 // Serviço para atualizar um produto existente.
 exports.update = async (id, produto) => {
-    // Desestrutura os dados atualizados do produto.
-    const { nome, descricao, preco } = produto;
-    const [result] = await db.query(
-        // Atualiza os dados do produto no banco.
-        'UPDATE produtos SET nome = ?, descricao = ?, preco = ? WHERE id = ?',
-        // Valores fornecidos à consulta, incluindo o ID.
-        [nome, descricao, preco, id],
-    );
-    // Retorna o número de linhas afetadas.
+    const { nome, descricao, preco, dataAtualizado } = produto;
+    let query;
+    let params;
+    if (dataAtualizado) {
+        query = 'UPDATE produtos SET nome = ?, descricao = ?, ' +
+            'preco = ?, dataAtualizado = ? WHERE id = ?';
+        params = [nome, descricao, preco, dataAtualizado, id];
+    } else {
+        query = 'UPDATE produtos SET nome = ?, ' +
+            'descricao = ?, preco = ? WHERE id = ?';
+        params = [nome, descricao, preco, id];
+    }
+    const [result] = await db.query(query, params);
     return { affectedRows: result.affectedRows };
 };
 
 // Serviço para excluir um produto.
 exports.delete = async (id) => {
-    // Exclui o produto pelo ID.
     const [result] = await db.query('DELETE FROM produtos WHERE id = ?', [id]);
-    // Retorna o número de linhas afetadas pela operação.
     return { affectedRows: result.affectedRows };
 };

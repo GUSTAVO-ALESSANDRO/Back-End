@@ -2,19 +2,19 @@ const logoutService = require('../services/logoutService');
 const chalk = require('chalk');
 
 exports.logout = async (req, res) => {
-    const { id } = req.body;
+    const userId = req.userId; // Vem do middleware JWT
 
-    if (!id) {
+    if (!userId) {
         console.log(chalk.yellow(
             '[AVISO] ID do usuário não fornecido para logout.'));
-        return res.status(400).json({
-            mensagem: 'ID do usuário não fornecido.' });
+        return res.status(401).json({
+            mensagem: 'Token inválido ou não fornecido.' });
     }
 
     try {
         console.log(chalk.blue(
-            '[LOGOUT] Tentativa de logout para usuário ID:', id));
-        const usuarioExiste = await logoutService.logout(id);
+            '[LOGOUT] Tentativa de logout para usuário ID:', userId));
+        const usuarioExiste = await logoutService.logout(userId);
 
         if (!usuarioExiste) {
             console.log(chalk.red(
@@ -24,7 +24,7 @@ exports.logout = async (req, res) => {
         }
 
         console.log(chalk.green(
-            '[SUCESSO] Logout realizado com sucesso para usuário ID:', id));
+            '[SUCESSO] Logout realizado com sucesso para usuário ID:', userId));
         return res.status(200).json({
             mensagem: 'Logout realizado com sucesso.'});
     } catch (error) {

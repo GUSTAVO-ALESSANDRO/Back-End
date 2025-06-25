@@ -3,13 +3,15 @@ module.exports.validarCliente = (req, res, next) => {
     const erros = {};
 
     // Validação de nome
-    if (!nome || typeof nome !== 'string') {
-        erros.nome = 'Nome inválido';
+    if (!nome || typeof nome !== 'string' ||
+            nome.length < 3 || nome.length > 255) {
+        erros.nome = 'Nome deve ter entre 3 e 255 caracteres';
     }
 
     // Validação de sobrenome
-    if (!sobrenome || typeof sobrenome !== 'string') {
-        erros.sobrenome = 'Sobrenome inválido';
+    if (!sobrenome || typeof sobrenome !== 'string' ||
+            sobrenome.length < 3 || sobrenome.length > 255) {
+        erros.sobrenome = 'Sobrenome deve ter entre 3 e 255 caracteres';
     }
 
     // Validação de email
@@ -22,8 +24,9 @@ module.exports.validarCliente = (req, res, next) => {
     // Validação de idade
     if (!idade) {
         erros.idade = 'Idade é obrigatória';
-    } else if (isNaN(Number(idade)) || Number(idade) <= 0) {
-        erros.idade = 'Idade deve ser um número válido e maior que zero';
+    } else if (isNaN(Number(idade)) ||
+            Number(idade) <= 0 || Number(idade) >= 120) {
+        erros.idade = 'Idade deve ser um número válido entre 1 e 119';
     }
 
     if (Object.keys(erros).length > 0) {

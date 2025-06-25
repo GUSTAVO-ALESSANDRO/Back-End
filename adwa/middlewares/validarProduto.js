@@ -3,29 +3,29 @@ module.exports.validarProduto = (req, res, next) => {
     const erros = {};
 
     // Validação de nome
-    if (!nome || typeof nome !== 'string') {
-        erros.nome = 'Nome inválido';
+    if (!nome || typeof nome !== 'string' ||
+            nome.length < 3 || nome.length > 255) {
+        erros.nome = 'Nome deve ter entre 3 e 255 caracteres';
     }
 
-    // Validação de descricao
-    if (!descricao || typeof descricao !== 'string') {
-        erros.descricao = 'Descrição inválida';
+    // Validação de descricao (opcional)
+    if (descricao && (typeof descricao !== 'string' ||
+            descricao.length < 3 || descricao.length > 255)) {
+        erros.descricao = 'Descrição deve ter entre 3 e 255 caracteres';
     }
 
     // Validação de preco
-    if (!preco) {
+    if (preco === undefined || preco === null) {
         erros.preco = 'Preço é obrigatório';
-    } else if (isNaN(Number(preco)) || Number(preco) <= 0) {
-        erros.preco = 'Preço deve ser um número válido e maior que zero';
+    } else if (isNaN(Number(preco)) || Number(preco) < 0) {
+        erros.preco = 'Preço deve ser um número válido maior ou igual a zero';
     }
 
-    // Validação de data
-    if (!dataAtualizado) {
-        erros.dataAtualizado = 'Data de atualização é obrigatória';
-    } else {
+    // Validação de data (opcional)
+    if (dataAtualizado) {
         const data = new Date(dataAtualizado);
-        const dataMinima = new Date('2000-01-01');
-        const dataMaxima = new Date('2025-06-20');
+        const dataMinima = new Date('2000-01-01 00:00:00');
+        const dataMaxima = new Date('2025-06-20 23:59:59');
 
         if (isNaN(data.getTime())) {
             erros.dataAtualizado = 'Data de atualização inválida';

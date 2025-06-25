@@ -3,11 +3,17 @@
   "name": "adwa-project",
   "version": "1.0.0",
   "description": "Projeto para manipulação de banco de dados com clientes e produtos.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "lint": "eslint ."
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "test": "jest --detectOpenHandles --forceExit"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [],
+    "testTimeout": 10000
   },
   "dependencies": {
     "adwa-project": "file:",
@@ -20,11 +26,13 @@
     "express": "^4.21.2",
     "http-errors": "^2.0.0",
     "jade": "^0.29.0",
+    "jest": "^30.0.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.14.0",
-    "node-cache": "^5.1.2"
+    "node-cache": "^5.1.2",
+    "supertest": "^7.1.1"
   },
   "devDependencies": {
     "eslint": "^8.57.1",

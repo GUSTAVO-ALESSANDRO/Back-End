@@ -36,11 +36,10 @@ async function renderizarProdutos() {
 
       produtoCard.innerHTML = `
                 <div class="info">
-                    <strong>ID:</strong> ${produto.id} <br>
                     <strong>Nome:</strong> ${produto.nome} <br>
                     <strong>Descrição:</strong> ${produto.descricao} <br>
                     <strong>Preço:</strong> R$ ${produto.preco} <br>
-                    <strong>Última Atualização:</strong> ${formatarData(produto.data_atualizado)} <br>
+                    <strong>Última Atualização:</strong> ${formatarData(produto.dataAtualizado)} <br>
                 </div>
                 <div class="actions">
                     <button class="editar" onclick='editarProduto(${JSON.stringify(
@@ -174,7 +173,6 @@ async function carregarDadosProduto() {
 
   // Preenche os campos do formulário com os dados do produto
   if (id && nome && descricao && preco) {
-    document.getElementById("produto-id").innerHTML = decodeURIComponent(id);
     document.getElementById("produto-nome").value = decodeURIComponent(nome);
     document.getElementById("produto-descricao").value =
       decodeURIComponent(descricao);
@@ -183,7 +181,6 @@ async function carregarDadosProduto() {
     alert("Erro: Parâmetros do produto não encontrados.");
   }
 }
-
 // Função para atualizar produto
 async function atualizarProduto() {
   try {
@@ -254,3 +251,4 @@ async function atualizarProduto() {
 if (window.location.pathname.includes("atualizarProduto.html")) {
   carregarDadosProduto();
 }
+

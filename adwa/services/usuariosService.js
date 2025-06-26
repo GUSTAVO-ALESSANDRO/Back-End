@@ -35,3 +35,20 @@ exports.delete = async (id) => {
     await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
     return { message: 'Usuário deletado com sucesso!', deletedId: id };
 };
+
+exports.update = async (id, usuario) => {
+    const { usuario: nomeUsuario, senha } = usuario;
+    let query, params;
+    if (senha) {
+        const bcrypt = require('bcrypt');
+        const saltRounds = 10;
+        const hashedSenha = await bcrypt.hash(senha, saltRounds);
+        query = 'UPDATE usuarios SET usuario = ?, senha = ? WHERE id = ?';
+        params = [nomeUsuario, hashedSenha, id];
+    } else {
+        query = 'UPDATE usuarios SET usuario = ? WHERE id = ?';
+        params = [nomeUsuario, id];
+    }
+    const [result] = await db.query(query, params);
+    return { affectedRows: result.affectedRows };
+};

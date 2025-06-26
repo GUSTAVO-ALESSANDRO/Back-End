@@ -1,15 +1,46 @@
 const baseUrl = "http://localhost:3000";
 
+// Adiciona a função getToken do session.js
+if (typeof getToken === 'undefined') {
+  function getToken() {
+    return localStorage.getItem('token');
+  }
+}
+
 // Carregar a lista de clientes ao iniciar a página
 // Verifica se está na página de clientes antes de chamar renderizarClientes
+async function checarAutenticacaoOuRedirecionar() {
+  const token = getToken();
+  if (!token) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  try {
+    const res = await fetch(`${baseUrl}/clientes`, { headers: { 'x-access-token': token } });
+    if (res.status !== 200) {
+      window.location.href = 'login.html';
+      return false;
+    }
+    return true;
+  } catch {
+    window.location.href = 'login.html';
+    return false;
+  }
+}
+
 if (document.getElementById("clientes-container")) {
-  renderizarClientes();
+  checarAutenticacaoOuRedirecionar().then((autenticado) => {
+    if (autenticado) renderizarClientes();
+  });
 }
 
 // Função para renderizar a lista de clientes
 async function renderizarClientes() {
   try {
-    const response = await fetch(`${baseUrl}/clientes`);
+    const token = getToken();
+    const response = await fetch(`${baseUrl}/clientes`, {
+      headers: { 'x-access-token': token }
+    });
     const clientes = await response.json();
 
     if (!response.ok)
@@ -25,7 +56,6 @@ async function renderizarClientes() {
 
       clienteCard.innerHTML = `
                 <div class="info">
-                    <strong>ID:</strong> ${cliente.id} <br>
                     <strong>Nome:</strong> ${cliente.nome} <br>
                     <strong>Sobrenome:</strong> ${cliente.sobrenome} <br>
                     <strong>Email:</strong> ${cliente.email} <br>
@@ -73,8 +103,10 @@ function confirmarExcluir(id) {
 // Função para excluir cliente
 async function excluirCliente(id) {
   try {
+    const token = getToken();
     const response = await fetch(`${baseUrl}/clientes/${id}`, {
       method: "DELETE",
+      headers: { 'x-access-token': token }
     });
 
     if (!response.ok) {
@@ -92,6 +124,7 @@ async function excluirCliente(id) {
 
 async function criarCliente() {
   try {
+    const token = getToken();
     const nome = document.getElementById("cliente-nome").value;
     const sobrenome = document.getElementById("cliente-sobrenome").value;
     const email = document.getElementById("cliente-email").value;
@@ -106,6 +139,7 @@ async function criarCliente() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'x-access-token': token
       },
       body: JSON.stringify({ nome, sobrenome, email, idade }),
     });
@@ -180,6 +214,7 @@ async function carregarDadosCliente() {
 // Função para atualizar cliente
 async function atualizarCliente() {
   try {
+    const token = getToken();
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
@@ -195,6 +230,7 @@ async function atualizarCliente() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        'x-access-token': token
       },
       body: JSON.stringify({ nome, sobrenome, email, idade }),
     });

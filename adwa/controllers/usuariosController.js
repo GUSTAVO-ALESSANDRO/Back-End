@@ -12,6 +12,8 @@ exports.createUsuario = async (req, res) => {
     }
     try {
         const novoUsuario = await usuariosService.create(usuario, senha);
+        const chaveCache = '"/usuarios"';
+        cache.del(chaveCache);
         console.log(chalk.green('[USUÁRIOS] Usuário criado com sucesso!'));
         res.status(201).json(novoUsuario);
     } catch (error) {
@@ -63,6 +65,33 @@ exports.deleteUsuario = async (req, res) => {
     } catch (error) {
         console.log(chalk.red(
             '[ERRO] Falha ao excluir usuário:', error.message));
+        res.status(400).json({ error: error.message });
+    }
+};
+
+exports.updateUsuario = async (req, res) => {
+    const { id } = req.params;
+    const usuario = req.body;
+
+    if (!usuario || !id) {
+        console.log(chalk.yellow(
+            '[AVISO] Usuário ou ID não fornecidos para atualização.'));
+        return res.status(400).json({ error: 'Usuário não encontrado' });
+    }
+
+    try {
+        const result = await usuariosService.update(id, usuario);
+        const chaveCache = '"/usuarios"';
+        cache.del(chaveCache);
+        console.log(chalk.magenta(
+            '[CACHE] Cache invalidado após atualização do usuário.'));
+        res.status(201).json({
+            message: 'Usuário atualizado com sucesso!',
+            result,
+        });
+    } catch (error) {
+        console.log(chalk.red(
+            '[ERRO] Falha ao atualizar usuário:', error.message));
         res.status(400).json({ error: error.message });
     }
 };

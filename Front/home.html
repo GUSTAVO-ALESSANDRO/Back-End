@@ -5,14 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .home-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .home-nav a {
+            padding: 0.7rem 2rem;
+            border-radius: 8px;
+            background: #f0f0f0;
+            color: #222;
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px #0001;
+            transition: background 0.2s;
+        }
+        .home-nav a:hover {
+            background: #e0e0e0;
+        }
+        #auth-status {
+            margin-top: 2rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Bem-vindo à Administração</h1>
         <nav>
-            <a href="clientes.html">Clientes</a>
             <a href="produtos.html">Produtos</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="usuarios.html">Usuários</a>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="logout.html" id="logout-link" style="display:none">Logout</a>
         </nav>
     </header>
+    <div id="auth-status" style="text-align:center;margin-top:2rem;font-weight:bold;"></div>
+    <script src="session.js"></script>
 </body>
 </html>

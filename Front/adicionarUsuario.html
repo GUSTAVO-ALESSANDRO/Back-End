@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Usuário</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Adicionar Usuário</h1>
+        <nav>
+            <a href="usuarios.html">Voltar para a lista de Usuários</a>
+        </nav>
+    </header>
+    <form id="form-adicionar-usuario" onsubmit="event.preventDefault(); criarUsuario();">
+        <input type="text" id="usuario-nome" placeholder="Usuário" required>
+        <input type="password" id="usuario-senha" placeholder="Senha" required>
+        <button type="submit" class="button">Adicionar Usuário</button>
+    </form>
+    <script src="session.js"></script>
+    <script src="usuarios.js"></script>
+</body>
+</html> 

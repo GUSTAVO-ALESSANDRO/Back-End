@@ -36,10 +36,9 @@ exports.createProduto = async (req, res) => {
 
     try {
         const result = await produtosService.create(produto);
-        const chaveCache = `"${req.originalUrl}"`;
-        cache.del(chaveCache);
-        console.log(chalk.magenta(
-            '[CACHE] Cache invalidado após criação de novo produto.'));
+        // Invalida o cache da lista
+        cache.del('"/produtos"');
+        console.log(chalk.magenta('[CACHE] Cache da lista de produtos invalidado após criação.'));
         res.status(201).json(result);
     } catch (error) {
         console.log(chalk.red('[ERRO] Falha ao criar produto:', error.message));
@@ -60,10 +59,10 @@ exports.updateProduto = async (req, res) => {
 
     try {
         const result = await produtosService.update(id, produto);
-        const chaveCache = `"${req.originalUrl}"`;
-        cache.del(chaveCache);
-        console.log(chalk.magenta(
-            '[CACHE] Cache invalidado após atualização do produto.'));
+        // Invalida o cache da lista e do item
+        cache.del('"/produtos"');
+        cache.del(`"/produtos/${id}"`);
+        console.log(chalk.magenta('[CACHE] Cache da lista e do produto individual invalidado após atualização.'));
         res.status(201).json({
             message: 'Produto atualizado com sucesso!',
             result,
@@ -86,10 +85,10 @@ exports.deleteProduto = async (req, res) => {
 
     try {
         const result = await produtosService.delete(id);
-        const chaveCache = `"${req.originalUrl}"`;
-        cache.del(chaveCache.substring(0, chaveCache.lastIndexOf('/'))+'"');
-        console.log(chalk.magenta(
-            '[CACHE] Cache invalidado após exclusão do produto.'));
+        // Invalida o cache da lista e do item
+        cache.del('"/produtos"');
+        cache.del(`"/produtos/${id}"`);
+        console.log(chalk.magenta('[CACHE] Cache da lista e do produto individual invalidado após exclusão.'));
         res.status(201).json({
             message: 'Produto deletado com sucesso!',
             result,

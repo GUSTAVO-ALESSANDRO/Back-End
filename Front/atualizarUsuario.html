@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Atualizar Usuário</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Atualizar Usuário</h1>
-        <nav>
-            <a href="usuarios.html">Voltar para a lista de Usuários</a>
-        </nav>
+      <h1>Atualizar Usuário</h1>
+      <nav>
+        <a href="usuarios.html">Voltar para a lista de Usuários</a>
+      </nav>
     </header>
+
     <form id="form-atualizar-usuario" onsubmit="event.preventDefault(); atualizarUsuario();">
-        <input type="text" id="usuario-nome" placeholder="Usuário" required>
-        <input type="password" id="usuario-senha" placeholder="Nova senha (opcional)">
-        <button type="submit" class="button">Atualizar Usuário</button>
+      <label>Nome de Usuário</label>
+      <input type="text" id="usuario-usuario" placeholder="Nome de Usuário" />
+      <div class="erro-msg" id="erro-usuario"></div>
+
+      <label>Senha Antiga</label>
+      <input type="password" id="usuario-senha-antiga" placeholder="Senha Antiga" />
+      <div class="erro-msg" id="erro-senha-antiga"></div>
+
+      <label>Nova Senha</label>
+      <input type="password" id="usuario-senha-nova" placeholder="Nova Senha" />
+      <div class="erro-msg" id="erro-senha-nova"></div>
+
+      <button type="submit" class="button">Atualizar Usuário</button>
     </form>
-    <script src="session.js"></script>
+
     <script src="usuarios.js"></script>
-</body>
-</html> 
+  </body>
+</html>

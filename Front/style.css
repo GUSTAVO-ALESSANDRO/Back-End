@@ -84,30 +84,30 @@ nav {
     gap: 15px;
 }
 
-#clientes-container, #produtos-container {
+#clientes-container, #produtos-container, #usuarios-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 20px;
 }
 
-#clientes-container div, #produtos-container div {
+#clientes-container div, #produtos-container div, #usuarios-container div {
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
 }
 
-#clientes-container div h3, #produtos-container div h3 {
+#clientes-container div h3, #produtos-container div h3, #usuarios-container div h3 {
     font-size: 1.3rem;
     margin-bottom: 10px;
 }
 
-#clientes-container div p, #produtos-container div p {
+#clientes-container div p, #produtos-container div p, #usuarios-container div p {
     font-size: 1rem;
     color: #555;
 }
 
-#clientes-container div button, #produtos-container div button {
+#clientes-container div button, #produtos-container div button, #usuarios-container div button {
     background-color: #3b8ea5;
     color: white;
     border: none;
@@ -118,24 +118,24 @@ nav {
     margin-top: 10px;
 }
 
-#clientes-container div button:hover, #produtos-container div button:hover {
+#clientes-container div button:hover, #produtos-container div button:hover, #usuarios-container div button:hover {
     background-color: #2a6d83;
 }
 
-#produtos-container div, #clientes-container div {
+#produtos-container div, #clientes-container div, #usuarios-container div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-#produtos-container div .actions, #clientes-container div .actions {
+#produtos-container div .actions, #clientes-container div .actions, #usuarios-container div .actions {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 20px;
 }
 
-#produtos-container div button, #clientes-container div button {
+#produtos-container div button, #clientes-container div button, #usuarios-container div button {
     align-self: flex-end;
 }
 

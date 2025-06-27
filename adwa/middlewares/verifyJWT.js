@@ -12,7 +12,12 @@ const SECRET = process.env.SECRET || 'chave-secreta-padrao';
  * @return {void} Não retorna um valor explícito.
  */
 function verifyJWT(req, res, next) {
-    const token = req.headers['x-access-token'];
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+        return res.status(401).json({ error: 'Token não fornecido' });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
     if (!token) {
         return res.status(401).json({ error: 'Token não fornecido' });
     }

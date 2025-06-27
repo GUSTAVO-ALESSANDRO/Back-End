@@ -169,8 +169,8 @@ http://localhost:3000
 ## Considerações sobre Autenticação
 
 - O back-end utiliza o JSON Web Token (JWT) para proteger as rotas sensíveis.
-- Para acessar as rotas protegidas, inclua o header `x-access-token` com o token JWT obtido no endpoint `/login`.
-- O endpoint `/logout` remove o token ja armazenado no banco de dados, invalidando o acesso.
+- Para acessar as rotas protegidas, inclua o header `Authorization` com o formato `Bearer <token>` onde o token JWT foi obtido no endpoint `/login`.
+- O endpoint `/logout` remove o token já armazenado no banco de dados, invalidando o acesso.
 
 ---
 
@@ -191,25 +191,39 @@ Você pode testar os endpoints utilizando ferramentas como [Postman](https://www
 
   ```json
   {
-    "user": "seu_usuario",
-    "password": "sua_senha"
+    "usuario": "seu_usuario",
+    "senha": "sua_senha"
   }
   ```
 
 - **Acesso a Endpoints Protegidos:**
 
-  Adicione o header:
-  ```http
-  x-access-token: seu_token_jwt
+  ```
+  Authorization: Bearer seu_token_jwt
+  ```
+
+- **Exemplo de requisição para `/clientes`:**
+
+  ```bash
+  curl -X GET http://localhost:3000/clientes \
+    -H "Authorization: Bearer seu_token_jwt"
   ```
 
 ---
 
 ## Contribuição e Desenvolvimento Futuro
 
-- O projeto está em fase de desenvolvimento e melhorias.  
-- Atualizações futuras incluirão:
-  - Integração completa entre front-end e back-end (suporte ao fluxo de autenticação no front).
-  - Implementação de testes automatizados.
-  - Funcionalidades adicionais, como paginação, filtros dinâmicos, dentre outras.
+Este projeto está em constante evolução. Contribuições são bem-vindas! Algumas melhorias planejadas:
+
+- Integração completa do front-end com autenticação JWT
+- Implementação de refresh tokens
+- Adição de mais validações de dados
+- Melhoria na documentação da API
+- Implementação de rate limiting
+- Adição de logs mais detalhados
+
 ---
+
+## Licença
+
+Este projeto está sob a licença ISC.

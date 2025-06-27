@@ -1,12 +1,11 @@
 const request = require('supertest');
 const app = require('../app');
 
-describe('Testes para rotas de login e logout', () => {
+describe('Testes para rotas de login', () => {
     let adminToken;
 
     beforeAll(async () => {
-        // Primeiro cria um usuário admin para os testes
-        // (pode falhar se já existir)
+        // Cria um usuário admin para os testes
         try {
             await request(app)
                 .post('/usuarios')
@@ -14,45 +13,41 @@ describe('Testes para rotas de login e logout', () => {
         } catch (error) {
             // Usuário já existe, continua
         }
-        // Faz login com o usuário criado
-        const loginRes = await request(app)
-            .post('/login')
-            .send({ usuario: 'admin', senha: 'admin123' });
-        if (loginRes.status === 200) {
-            adminToken = loginRes.body.token;
-        }
     });
 
-    // Testes de login
     it('deve fazer login com credenciais válidas', async () => {
         const res = await request(app)
             .post('/login')
             .send({ usuario: 'admin', senha: 'admin123' });
         expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('auth', true);
         expect(res.body).toHaveProperty('token');
         expect(typeof res.body.token).toBe('string');
-        expect(res.body.token.length).toBeGreaterThan(0);
+        adminToken = res.body.token;
     });
 
-    it('deve rejeitar login com usuário inválido', async () => {
+    it('deve rejeitar login com usuário inexistente', async () => {
         const res = await request(app)
             .post('/login')
-            .send({ usuario: 'usuarioinexistente', senha: 'admin123' });
+            .send({ usuario: 'usuarioinexistente', senha: 'senha123' });
         expect(res.status).toBe(401);
+        expect(res.body).toHaveProperty('mensagem');
     });
 
-    it('deve rejeitar login com senha inválida', async () => {
+    it('deve rejeitar login com senha incorreta', async () => {
         const res = await request(app)
             .post('/login')
             .send({ usuario: 'admin', senha: 'senhaincorreta' });
         expect(res.status).toBe(401);
+        expect(res.body).toHaveProperty('mensagem');
     });
 
     it('deve rejeitar login sem usuário', async () => {
         const res = await request(app)
             .post('/login')
-            .send({ senha: 'admin123' });
+            .send({ senha: 'senha123' });
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message');
     });
 
     it('deve rejeitar login sem senha', async () => {
@@ -60,6 +55,15 @@ describe('Testes para rotas de login e logout', () => {
             .post('/login')
             .send({ usuario: 'admin' });
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message');
+    });
+
+    it('deve rejeitar login sem dados', async () => {
+        const res = await request(app)
+            .post('/login')
+            .send({});
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message');
     });
 
     it('deve rejeitar login com dados vazios', async () => {
@@ -67,53 +71,74 @@ describe('Testes para rotas de login e logout', () => {
             .post('/login')
             .send({ usuario: '', senha: '' });
         expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message');
     });
 
-    // Testes de logout
+    it('deve permitir acesso a rota protegida com token válido', async () => {
+        if (!adminToken) {
+            // Se não conseguiu fazer login, pula o teste
+            return;
+        }
+        const res = await request(app)
+            .get('/clientes')
+            .set('authorization', `Bearer ${adminToken}`);
+        expect(res.status).toBe(200);
+    });
+
+    it('deve rejeitar acesso a rota protegida com token inválido', async () => {
+        const res = await request(app)
+            .get('/clientes')
+            .set('authorization', 'Bearer tokeninvalido');
+        expect(res.status).toBe(401);
+    });
+
+    it('deve rejeitar acesso a rota protegida sem token', async () => {
+        const res = await request(app)
+            .get('/clientes');
+        expect(res.status).toBe(401);
+    });
+
     it('deve fazer logout com token válido', async () => {
         if (!adminToken) {
             // Se não conseguiu fazer login, pula o teste
             return;
         }
-        const logoutRes = await request(app)
-            .post('/logout')
-            .set('x-access-token', adminToken);
-        expect(logoutRes.status).toBe(200);
-    });
-
-    it('deve rejeitar logout sem token', async () => {
-        const res = await request(app)
-            .post('/logout');
-        expect(res.status).toBe(401);
-    });
-
-    it('deve rejeitar logout com token inválido', async () => {
         const res = await request(app)
             .post('/logout')
-            .set('x-access-token', 'tokeninvalido');
-        expect(res.status).toBe(401);
+            .set('authorization', `Bearer ${adminToken}`);
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('mensagem');
     });
 
-    // Testes de invalidação de token após logout
     it('deve invalidar token após logout', async () => {
-        // Obtém um token fresco para este teste
-        const loginRes = await request(app)
-            .post('/login')
-            .send({ usuario: 'admin', senha: 'admin123' });
-        if (loginRes.status !== 200) {
+        if (!adminToken) {
             // Se não conseguiu fazer login, pula o teste
             return;
         }
-        const freshToken = loginRes.body.token;
         // Faz logout
-        const logoutRes = await request(app)
+        await request(app)
             .post('/logout')
-            .set('x-access-token', freshToken);
-        expect(logoutRes.status).toBe(200);
-        // Verifica que o token não funciona mais após logout
-        const invalidRes = await request(app)
+            .set('authorization', `Bearer ${adminToken}`);
+
+        // Tenta acessar rota protegida com token invalidado
+        const res = await request(app)
             .get('/clientes')
-            .set('x-access-token', freshToken);
-        expect(invalidRes.status).toBe(401);
+            .set('authorization', `Bearer ${adminToken}`);
+        expect(res.status).toBe(401);
+    });
+
+    it('deve gerar novo token após logout e novo login', async () => {
+        // Faz novo login para obter token fresco
+        const loginRes = await request(app)
+            .post('/login')
+            .send({ usuario: 'admin', senha: 'admin123' });
+        expect(loginRes.status).toBe(200);
+        const freshToken = loginRes.body.token;
+
+        // Verifica se o novo token funciona
+        const res = await request(app)
+            .get('/clientes')
+            .set('authorization', `Bearer ${freshToken}`);
+        expect(res.status).toBe(200);
     });
 });

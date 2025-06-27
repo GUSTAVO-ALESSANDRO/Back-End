@@ -16,7 +16,7 @@ async function checarAutenticacaoOuRedirecionar() {
     return false;
   }
   try {
-    const res = await fetch(`${baseUrl}/clientes`, { headers: { 'x-access-token': token } });
+    const res = await fetch(`${baseUrl}/clientes`, { headers: { 'authorization': `Bearer ${token}` } });
     if (res.status !== 200) {
       window.location.href = 'login.html';
       return false;
@@ -39,7 +39,7 @@ async function renderizarClientes() {
   try {
     const token = getToken();
     const response = await fetch(`${baseUrl}/clientes`, {
-      headers: { 'x-access-token': token }
+      headers: { 'authorization': `Bearer ${token}` }
     });
     const clientes = await response.json();
 
@@ -106,7 +106,7 @@ async function excluirCliente(id) {
     const token = getToken();
     const response = await fetch(`${baseUrl}/clientes/${id}`, {
       method: "DELETE",
-      headers: { 'x-access-token': token }
+      headers: { 'authorization': `Bearer ${token}` }
     });
 
     if (!response.ok) {
@@ -139,7 +139,7 @@ async function criarCliente() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'x-access-token': token
+        'authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ nome, sobrenome, email, idade }),
     });
@@ -189,25 +189,27 @@ async function criarCliente() {
   }
 }
 
-// Função para carregar os dados do cliente na página de atualização
+// Função para carregar os dados do cliente na página de atualização (busca do banco)
 async function carregarDadosCliente() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-  const nome = params.get("nome");
-  const sobrenome = params.get("sobrenome");
-  const email = params.get("email");
-  const idade = params.get("idade");
-
-  // Preenche os campos do formulário com os dados do produto
-  if (id && nome && sobrenome && email && idade) {
-    document.getElementById("cliente-id").innerHTML = decodeURIComponent(id);
-    document.getElementById("cliente-nome").value = decodeURIComponent(nome);
-    document.getElementById("cliente-sobrenome").value =
-      decodeURIComponent(sobrenome);
-    document.getElementById("cliente-email").value = decodeURIComponent(email);
-    document.getElementById("cliente-idade").value = decodeURIComponent(idade);
+  if (id) {
+    try {
+      const token = getToken();
+      const response = await fetch(`${baseUrl}/clientes/${id}`, {
+        headers: { 'authorization': `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Erro ao buscar cliente');
+      const cliente = await response.json();
+      document.getElementById("cliente-nome").value = cliente.nome || '';
+      document.getElementById("cliente-sobrenome").value = cliente.sobrenome || '';
+      document.getElementById("cliente-email").value = cliente.email || '';
+      document.getElementById("cliente-idade").value = cliente.idade || '';
+    } catch (e) {
+      alert("Erro ao buscar dados do cliente.");
+    }
   } else {
-    alert("Erro: Parâmetros do cliente não encontrados.");
+    alert("Erro: Parâmetro do cliente não encontrado.");
   }
 }
 
@@ -230,7 +232,7 @@ async function atualizarCliente() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        'x-access-token': token
+        'authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ nome, sobrenome, email, idade }),
     });

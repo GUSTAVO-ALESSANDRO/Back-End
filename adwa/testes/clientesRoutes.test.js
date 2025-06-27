@@ -33,7 +33,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Jo', sobrenome: 'Silva',
                 email: 'joaoteste1@example.com', idade: 25 });
         expect(res.status).toBe(400);
@@ -48,14 +48,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste2@example.com', idade: 25 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.nome).toBe('Ana');
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve aceitar nome com 255 caracteres', async () => {
@@ -67,14 +67,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste3@example.com', idade: 30 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.nome).toBe(palavra255);
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve rejeitar nome com 256 caracteres', async () => {
@@ -84,7 +84,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: palavra256, sobrenome: 'Silva',
                 email: 'joaoteste4@example.com', idade: 30 });
         expect(res.status).toBe(400);
@@ -98,7 +98,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Si',
                 email: 'joaoteste5@example.com', idade: 25 });
         expect(res.status).toBe(400);
@@ -113,14 +113,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste6@example.com', idade: 25 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.sobrenome).toBe('Sil');
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve aceitar sobrenome com 255 caracteres', async () => {
@@ -132,14 +132,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste7@example.com', idade: 25 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.sobrenome).toBe(palavra255);
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve rejeitar sobrenome com mais de 255 caracteres', async () => {
@@ -149,7 +149,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: palavra256,
                 email: 'joaoteste5@example.com', idade: 25 });
         expect(res.status).toBe(400);
@@ -163,7 +163,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'emailinvalido', idade: 25 });
         expect(res.status).toBe(400);
@@ -176,7 +176,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'email@', idade: 25 });
         expect(res.status).toBe(400);
@@ -191,14 +191,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste8@example.com', idade: 30 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.email).toBe(cliente.email);
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     // Testes de validação de idade
@@ -209,7 +209,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'joaoteste9@example.com', idade: 0 });
         expect(res.status).toBe(400);
@@ -222,7 +222,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'joaoteste10@example.com', idade: -1 });
         expect(res.status).toBe(400);
@@ -237,14 +237,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste11@example.com', idade: 1 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.idade).toBe(1);
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve aceitar idade igual a 119', async () => {
@@ -256,14 +256,14 @@ describe('Testes completos para rotas de clientes', () => {
             email: 'joaoteste12@example.com', idade: 119 };
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(cliente);
         expect(res.status).toBe(201);
         expect(res.body.idade).toBe(119);
         const id = res.body.id || res.body.result?.insertId;
         await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
     });
 
     it('deve rejeitar idade igual a 120', async () => {
@@ -273,7 +273,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'joaoteste13@example.com', idade: 120 });
         expect(res.status).toBe(400);
@@ -286,7 +286,7 @@ describe('Testes completos para rotas de clientes', () => {
         }
         const res = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ nome: 'Joao', sobrenome: 'Silva',
                 email: 'joaoteste14@example.com', idade: 121 });
         expect(res.status).toBe(400);
@@ -336,7 +336,7 @@ describe('Testes completos para rotas de clientes', () => {
         };
         const createRes = await request(app)
             .post('/clientes')
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send(novoCliente);
         expect(createRes.status).toBe(201);
         expect(createRes.body.nome).toBe(novoCliente.nome);
@@ -344,7 +344,7 @@ describe('Testes completos para rotas de clientes', () => {
         // READ
         const readRes = await request(app)
             .get('/clientes')
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
         expect(readRes.status).toBe(200);
         expect(Array.isArray(readRes.body)).toBe(true);
         expect(readRes.body.some( (c) => c.email === novoCliente.email))
@@ -352,14 +352,14 @@ describe('Testes completos para rotas de clientes', () => {
         // UPDATE
         const updateRes = await request(app)
             .put(`/clientes/${id}`)
-            .set('x-access-token', token)
+            .set('authorization', `Bearer ${token}`)
             .send({ ...novoCliente, nome: 'Atualizado' });
         expect(updateRes.status).toBe(201);
         expect(updateRes.body.message).toMatch(/atualizado/i);
         // DELETE
         const deleteRes = await request(app)
             .delete(`/clientes/${id}`)
-            .set('x-access-token', token);
+            .set('authorization', `Bearer ${token}`);
         expect(deleteRes.status).toBe(201);
         expect(deleteRes.body.message).toMatch(/deletado/i);
     });

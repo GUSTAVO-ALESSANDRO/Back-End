@@ -17,4 +17,7 @@ router.put('/:id', verifyJWT, validarCliente, clientesController.updateCliente);
 // Rota para deletar um cliente (método DELETE, identificado pelo ID)
 router.delete('/:id', verifyJWT, clientesController.deleteCliente);
 
+// Rota para buscar um cliente por ID
+router.get('/:id', verifyJWT, clientesController.getClienteById);
+
 module.exports = router;

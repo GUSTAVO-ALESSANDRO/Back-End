@@ -37,18 +37,33 @@ exports.delete = async (id) => {
 };
 
 exports.update = async (id, usuario) => {
-    const { usuario: nomeUsuario, senha } = usuario;
-    let query, params;
-    if (senha) {
-        const bcrypt = require('bcrypt');
-        const saltRounds = 10;
-        const hashedSenha = await bcrypt.hash(senha, saltRounds);
-        query = 'UPDATE usuarios SET usuario = ?, senha = ? WHERE id = ?';
-        params = [nomeUsuario, hashedSenha, id];
-    } else {
-        query = 'UPDATE usuarios SET usuario = ? WHERE id = ?';
-        params = [nomeUsuario, id];
+    const { usuario: nomeUsuario, senhaAntiga, senhaNova } = usuario;
+    // Busca o usuário atual
+    const [rows] = await db.query('SELECT * FROM usuarios WHERE id = ?', [id]);
+    const user = rows[0];
+    if (!user) {
+        throw new Error('Usuário não encontrado.');
     }
-    const [result] = await db.query(query, params);
-    return { affectedRows: result.affectedRows };
+    // Se for atualizar senha, verifica a senha antiga
+    if (senhaNova) {
+        const senhaCorreta = await bcrypt.compare(senhaAntiga, user.senha);
+        if (!senhaCorreta) {
+            throw new Error('Senha atual incorreta.');
+        }
+        const hashedSenha = await bcrypt.hash(senhaNova, saltRounds);
+        const [result] = await db.query(
+            'UPDATE usuarios SET usuario = ?, senha = ? WHERE id = ?',
+            [nomeUsuario, hashedSenha, id]);
+        return { affectedRows: result.affectedRows };
+    } else {
+        const [result] = await db.query(
+            'UPDATE usuarios SET usuario = ? WHERE id = ?', [nomeUsuario, id]);
+        return { affectedRows: result.affectedRows };
+    }
+};
+
+exports.getById = async (id) => {
+    const [rows] = await db.query(
+        'SELECT id, usuario FROM usuarios WHERE id = ?', [id]);
+    return rows[0] || null;
 };

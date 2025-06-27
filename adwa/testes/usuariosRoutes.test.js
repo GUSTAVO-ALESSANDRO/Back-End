@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
+const db = require('../configs/db');
 const palavra255 = 'A'.repeat(255);
 const palavra256 = 'A'.repeat(256);
 
@@ -17,7 +18,7 @@ describe('Testes para rotas de usuários', () => {
                 if (token) {
                     await request(app)
                         .delete(`/usuarios/${userId}`)
-                        .set('x-access-token', token);
+                        .set('authorization', `Bearer ${token}`);
                 }
             } catch (error) {}
         }
@@ -26,14 +27,14 @@ describe('Testes para rotas de usuários', () => {
         // tenha sido registrado no array de IDs
         for (const username of createdUsernames) {
             try {
-                const [res] = await app.db.query(
+                const [res] = await db.query(
                     'SELECT id FROM usuarios WHERE usuario = ?', [username]);
                 if (res && res.length > 0) {
                     const id = res[0].id;
                     if (token) {
                         await request(app)
                             .delete(`/usuarios/${id}`)
-                            .set('x-access-token', token);
+                            .set('authorization', `Bearer ${token}`);
                     }
                 }
             } catch (error) {}
@@ -51,10 +52,10 @@ describe('Testes para rotas de usuários', () => {
 
     // Necessario para o lint
     /**
-    * Gera um nome de usuário único para testes.
-    * @param {string} suffix - Um sufixo identificador para o nome.
-    * @return {string} Nome de usuário único.
-    */
+     * Gera um nome de usuário único para testes.
+     * @param {string} suffix - Um sufixo identificador para o nome.
+     * @return {string} Nome de usuário único.
+     */
     function uniqueUser(suffix) {
         return `usuario_teste_${suffix}_${Date.now()}`;
     }
@@ -116,7 +117,7 @@ describe('Testes para rotas de usuários', () => {
             const token = loginRes.body.token;
             const res = await request(app)
                 .get('/usuarios')
-                .set('x-access-token', token);
+                .set('authorization', `Bearer ${token}`);
             expect(res.status).toBe(200);
             expect(Array.isArray(res.body)).toBe(true);
             expect(res.body.length).toBeGreaterThan(0);

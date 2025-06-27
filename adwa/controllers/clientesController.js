@@ -103,3 +103,19 @@ exports.deleteCliente = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.getClienteById = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ error: 'ID do cliente não fornecido.' });
+    }
+    try {
+        const cliente = await clientesService.getById(id);
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado.' });
+        }
+        res.status(200).json(cliente);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

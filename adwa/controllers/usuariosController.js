@@ -95,3 +95,19 @@ exports.updateUsuario = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.getUsuarioById = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ error: 'ID do usuário não fornecido.' });
+    }
+    try {
+        const usuario = await usuariosService.getById(id);
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+        res.status(200).json(usuario);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

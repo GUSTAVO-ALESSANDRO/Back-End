@@ -44,3 +44,8 @@ exports.delete = async (id) => {
     // Retorna o número de linhas afetadas pela operação.
     return { affectedRows: result.affectedRows };
 };
+
+exports.getById = async (id) => {
+    const [rows] = await db.query('SELECT * FROM clientes WHERE id = ?', [id]);
+    return rows[0] || null;
+};

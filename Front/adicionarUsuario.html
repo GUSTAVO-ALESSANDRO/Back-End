@@ -13,12 +13,17 @@
             <a href="usuarios.html">Voltar para a lista de Usuários</a>
         </nav>
     </header>
+
     <form id="form-adicionar-usuario" onsubmit="event.preventDefault(); criarUsuario();">
-        <input type="text" id="usuario-nome" placeholder="Usuário" required>
-        <input type="password" id="usuario-senha" placeholder="Senha" required>
+        <input type="text" id="usuario-usuario" placeholder="Nome de Usuário" >
+        <div class="erro-msg" id="erro-usuario"></div>
+
+        <input type="password" id="usuario-senha" placeholder="Senha" >
+        <div class="erro-msg" id="erro-senha"></div>
+
         <button type="submit" class="button">Adicionar Usuário</button>
     </form>
-    <script src="session.js"></script>
+
     <script src="usuarios.js"></script>
 </body>
-</html> 
+</html>

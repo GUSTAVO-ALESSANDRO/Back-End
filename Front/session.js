@@ -14,38 +14,56 @@ function clearToken() {
 	localStorage.removeItem('token');
 }
 
-async function isTokenValid() {
-	const token = getToken();
-	if (!token) return false;
-	try {
-		// Tenta acessar um endpoint protegido
-		const res = await fetch(`${baseUrl}/usuarios`, {
-			headers: { 'x-access-token': token }
-		});
-		if (res.status === 200) return true;
-		clearToken();
-		return false;
-	} catch {
-		clearToken();
-		return false;
-	}
+function isAuthenticated() {
+	return getToken() !== null;
 }
 
-async function updateAuthUI() {
+async function authenticatedFetch(url, options = {}) {
+	const token = getToken();
+	if (!token) {
+		throw new Error('Usuário não autenticado');
+	}
+
+	const defaultOptions = {
+		headers: {
+			'Content-Type': 'application/json',
+			'authorization': `Bearer ${token}`
+		}
+	};
+
+	const finalOptions = { ...defaultOptions, ...options };
+	if (finalOptions.body && typeof finalOptions.body === 'object') {
+		finalOptions.body = JSON.stringify(finalOptions.body);
+	}
+
+	const response = await fetch(url, finalOptions);
+	
+	if (response.status === 401) {
+		clearToken();
+		window.location.href = 'login.html';
+		throw new Error('Token expirado ou inválido');
+	}
+
+	return response;
+}
+
+function updateAuthUI() {
 	const loginLink = document.getElementById('login-link');
 	const logoutLink = document.getElementById('logout-link');
 	const authStatus = document.getElementById('auth-status');
-	const isValid = await isTokenValid();
-	if (isValid) {
+
+	if (isAuthenticated()) {
 		if (loginLink) loginLink.style.display = 'none';
-		if (logoutLink) logoutLink.style.display = '';
-		if (authStatus) authStatus.innerText = 'Usuário autenticado';
+		if (logoutLink) logoutLink.style.display = 'inline';
+		if (authStatus) authStatus.textContent = '✅ Autenticado';
 	} else {
-		if (loginLink) loginLink.style.display = '';
+		if (loginLink) loginLink.style.display = 'inline';
 		if (logoutLink) logoutLink.style.display = 'none';
-		if (authStatus) authStatus.innerText = 'Não autenticado';
+		if (authStatus) authStatus.textContent = '❌ Não autenticado';
 	}
 }
 
 window.updateAuthUI = updateAuthUI;
-document.addEventListener('DOMContentLoaded', updateAuthUI); 
+if (typeof document !== 'undefined') {
+	updateAuthUI();
+} 

@@ -8,16 +8,16 @@ module.exports.validarProduto = (req, res, next) => {
         erros.nome = 'Nome deve ter entre 3 e 255 caracteres';
     }
 
-    // Validação de descricao (opcional)
-    if (descricao && (typeof descricao !== 'string' ||
-            descricao.length < 3 || descricao.length > 255)) {
-        erros.descricao = 'Descrição deve ter entre 3 e 255 caracteres';
+    // Validação de descricao (agora obrigatória)
+    if (!descricao || typeof descricao !== 'string' ||
+            descricao.length < 3 || descricao.length > 255) {
+        erros.descricao = 'Descrição é obrigatória e deve ter entre 3 e 255 caracteres';
     }
 
     // Validação de preco
-    if (preco === undefined || preco === null) {
-        erros.preco = 'Preço é obrigatório';
-    } else if (isNaN(Number(preco)) || Number(preco) < 0) {
+    if (preco === undefined || preco === null || preco === "" || isNaN(Number(preco))) {
+        erros.preco = 'Preço é obrigatório e deve ser um número válido';
+    } else if (Number(preco) < 0) {
         erros.preco = 'Preço deve ser um número válido maior ou igual a zero';
     }
 

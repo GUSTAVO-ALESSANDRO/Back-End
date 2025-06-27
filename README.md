@@ -1,229 +1,203 @@
-# Projeto Back-End com API RESTful (e Front-End Desatualizado) - Em Desenvolvimento
+# Sistema de Gerenciamento de Clientes, Produtos e Usuários
 
-Este projeto é uma API RESTful desenvolvida com Node.js e Express, que gerencia clientes e produtos, além de oferecer autenticação JWT para rotas protegidas. O back-end se integra com um banco de dados MySQL e utiliza caching (por meio do NodeCache) para melhorar a performance. A estrutura conta também com um front-end, localizado na pasta `/Front`, que foi desenvolvido anteriormente à implementação da autenticação e, por esse motivo, encontra-se desatualizado para a versão atual da API.
-
-> **Atenção:**  
-> O projeto está em fase de desenvolvimento. Sendo assim, o front-end atual (localizado na pasta `/Front`) não funciona plenamente com a nova versão do back-end que implementa autenticação JWT. Atualizações estarão disponíveis em versões futuras para integrar corretamente o fluxo de autenticação.
+Este projeto é uma aplicação completa composta por um **Back-End** (API RESTful com Node.js/Express, MySQL, autenticação JWT, cache e testes automatizados) e um **Front-End** (HTML, CSS, JS puro) para gerenciamento de clientes, produtos e usuários.
 
 ---
 
 ## Índice
 
-- [Descrição](#descrição)
+- [Visão Geral](#visão-geral)
 - [Funcionalidades](#funcionalidades)
 - [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Configuração e Instalação](#configuração-e-instalação)
-- [Execução da API](#execução-da-api)
-- [Considerações sobre Autenticação](#considerações-sobre-autenticação)
-- [Observações sobre o Front-End](#observações-sobre-o-front-end)
-- [Testando a API](#testando-a-api)
-- [Contribuição e Desenvolvimento Futuro](#contribuição-e-desenvolvimento-futuro)
+- [Requisitos](#requisitos)
+- [Instalação e Configuração](#instalação-e-configuração)
+- [Como Executar](#como-executar)
+- [Detalhes do Back-End](#detalhes-do-back-end)
+  - [Rotas e Endpoints](#rotas-e-endpoints)
+  - [Cache](#cache)
+  - [Autenticação JWT](#autenticação-jwt)
+  - [Testes Automatizados](#testes-automatizados)
+- [Detalhes do Front-End](#detalhes-do-front-end)
 
 ---
 
-## Descrição
+## Visão Geral
 
-Este projeto oferece:
-- Endpoints para **clientes**: criação, consulta, atualização e exclusão.
-- Endpoints para **produtos**: criação, consulta, atualização e exclusão.
-- Endpoints para **autenticação**: login (geração de token JWT) e logout (invalidação de token).
-- Middlewares de validação para garantir a integridade dos dados e middleware para verificação do JWT em acessos restritos.
-- Uso de cache para otimização de performance nas requisições de clientes e produtos.
+O sistema permite:
+- Gerenciar clientes, produtos e usuários via API RESTful.
+- Proteger rotas sensíveis com autenticação JWT.
+- Utilizar cache para otimizar consultas.
+- Testar endpoints com scripts automatizados.
+- Utilizar uma interface web para operações CRUD (clientes, produtos, usuários).
 
 ---
 
 ## Funcionalidades
 
-- **Clientes**
-  - **GET `/clientes`**: Retorna todos os clientes (proteção via token JWT e caching).
-  - **POST `/clientes`**: Cria um novo cliente (dados validados).
-  - **PUT `/clientes/:id`**: Atualiza um cliente existente.
-  - **DELETE `/clientes/:id`**: Exclui um cliente e invalida o cache correspondente.
-
-- **Produtos**
-  - **GET `/produtos`**: Retorna todos os produtos (com caching dinâmico).
-  - **POST `/produtos`**: Cria um novo produto (dados validados).
-  - **PUT `/produtos/:id`**: Atualiza um produto existente.
-  - **DELETE `/produtos/:id`**: Exclui um produto e invalida o cache associado.
-
-- **Autenticação**
-  - **POST `/login`**: Autentica o usuário e gera um token JWT.
-  - **POST `/logout`**: Realiza o logout removendo o token do usuário.
-  - **GET `/protegido`**: Rota de exemplo protegida, acessível apenas com token JWT válido.
+- **Clientes:** CRUD completo, com validação e cache.
+- **Produtos:** CRUD completo, com validação e cache.
+- **Usuários:** Cadastro, autenticação (login/logout), atualização e exclusão.
+- **Autenticação:** JWT para rotas protegidas.
+- **Cache:** NodeCache para respostas rápidas.
+- **Testes:** Testes automatizados para rotas principais.
+- **Front-End:** Interface web para todas as operações.
 
 ---
 
 ## Estrutura do Projeto
 
-O projeto está organizado em duas principais áreas:
-
-### Back-End (Pasta `adwa`)
-
-- **app.js**  
-  Ponto de entrada do aplicativo Express e definição das rotas.
-
-- **cache/**  
-  Arquivo `cache.js` com configuração do NodeCache para armazenar dados temporariamente.
-
-- **configs/**  
-  Arquivo `db.js` que configura o pool de conexões com o MySQL.
-
-- **controllers/**  
-  Controladores para clientes, produtos, login e logout.
-
-- **middlewares/**  
-  Middlewares para:  
-  - Validação dos dados de entrada (clientes e produtos)  
-  - Verificação de cache antes da execução das rotas  
-  - Verificação do JWT para proteger rotas.
-
-- **models/**  
-  Script SQL (`create_tables.sql`) para criação das tabelas necessárias (clientes, produtos e usuários).
-
-- **routes/**  
-  Definição dos endpoints para clientes, produtos, login, logout e rota protegida.
-
-- **services/**  
-  Lógica de negócio que interage com o banco de dados (clientes, produtos, autenticação e logout).
-
-- **views/**  
-  Exemplos de templates (por exemplo, `index.jade`).
-
-### Front-End (Pasta `Front`)
-
-- Contém arquivos HTML, CSS e JavaScript para uma interface de usuário.
-- Páginas para gerenciamento de clientes e produtos (inclusão, atualização, listagem, etc.).
-- **Atenção:** O front-end foi desenvolvido antes da implementação da autenticação JWT e, portanto, não está integrado com as proteções atualmente ativas na API. Ainda está em modo experimental.
+```
+Back-End/
+│
+├── Back/
+│   ├── app.js                # Inicialização do Express e rotas
+│   ├── server.js             # Inicialização do servidor
+│   ├── package.json          # Dependências e scripts
+│   ├── cache/
+│   │   └── cache.js          # Configuração do NodeCache
+│   ├── configs/
+│   │   └── db.js             # Configuração do banco MySQL
+│   ├── controllers/          # Lógica das rotas (clientes, produtos, usuários, login, logout)
+│   ├── middlewares/          # Validações, autenticação JWT, cache
+│   ├── models/
+│   │   └── create_tables.sql # Script SQL para criar tabelas
+│   ├── routes/               # Definição dos endpoints
+│   ├── services/             # Lógica de negócio e acesso ao banco
+│   ├── testes/               # Testes automatizados
+│   └── views/                # Templates (ex: index.jade)
+│
+├── Front/
+│   ├── *.html                # Páginas da interface
+│   ├── *.js                  # Scripts de interação com a API
+│   └── style.css             # Estilos
+│
+└── README.md                 # Este arquivo
+```
 
 ---
 
-## Pré-requisitos
+## Requisitos
 
-- [Node.js](https://nodejs.org/) (versão 12 ou superior)
-- [MySQL](https://www.mysql.com/)
-- [npm](https://www.npmjs.com/)
+- Node.js (>= 12)
+- npm
+- MySQL
 
 ---
 
-## Configuração e Instalação
+## Instalação e Configuração
 
-1. **Clone o Repositório**
-
+1. **Clone o repositório**
    ```bash
    git clone https://github.com/GUSTAVO-ALESSANDRO/Back-End
-   cd Back-End/adwa
+   cd Back-End/Back
    ```
 
-2. **Crie o Arquivo `.env`**
-
-   No diretório `adwa/`, crie um arquivo chamado `.env` com o seguinte conteúdo:
-
-   ```env
-   DB_HOST=seu_host_do_banco
+2. **Crie o arquivo `.env`**
+   ```
+   DB_HOST=localhost
    DB_USER=seu_usuario
    DB_PASSWORD=sua_senha
    DB_NAME=nome_do_banco
-   DB_PORT=porta_do_banco
-   SECRET=sua_chave_secreta_para_jwt
+   DB_PORT=3306
+   SECRET=sua_chave_jwt
    PORT=3000
    ```
 
-   Ajuste os valores de acordo com a sua configuração local.
-
-3. **Instale as Dependências**
-
-   Execute o comando abaixo para instalar todas as dependências definidas no `package.json`:
-
+3. **Instale as dependências**
    ```bash
    npm install
    ```
 
-4. **Configuração do Banco de Dados**
-
-   - Crie um banco de dados MySQL com o nome definido na variável `DB_NAME`.
-   - Execute o script SQL localizado em `models/create_tables.sql` para criar as tabelas necessárias:
-
-     ```sql
-     SOURCE caminho/para/o/arquivo/create_tables.sql;
-     ```
+4. **Configure o banco de dados**
+   - Crie o banco no MySQL.
+   - Execute o script `models/create_tables.sql` para criar as tabelas.
 
 ---
 
-## Execução da API
+## Como Executar
 
-Inicie o servidor em modo de desenvolvimento utilizando o [nodemon](https://nodemon.io/):
-
-```bash
-npm run dev
-```
-
-O servidor iniciará na porta definida na variável `PORT` (padrão: 3000). A API estará disponível em:
-
-```
-http://localhost:3000
-```
-
----
-
-## Considerações sobre Autenticação
-
-- O back-end utiliza o JSON Web Token (JWT) para proteger as rotas sensíveis.
-- Para acessar as rotas protegidas, inclua o header `Authorization` com o formato `Bearer <token>` onde o token JWT foi obtido no endpoint `/login`.
-- O endpoint `/logout` remove o token já armazenado no banco de dados, invalidando o acesso.
-
----
-
-## Observações sobre o Front-End
-
-- A pasta `/Front` contém os arquivos que formam a interface do usuário.
-- Atualmente, o front-end **não funciona** com a versão atual da API, pois foi desenvolvido sem considerar a autenticação JWT.
-- A integração do front-end com os novos mecanismos de segurança (autenticação) ainda está em desenvolvimento.
-- Portanto, recomenda-se testar a API utilizando ferramentas como Postman ou Insomnia para o fluxo completo de autenticação e acesso.
-
----
-
-## Testando a API
-
-Você pode testar os endpoints utilizando ferramentas como [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/). Exemplos:
-
-- **Requisição de Login (POST `/login`):**
-
-  ```json
-  {
-    "usuario": "seu_usuario",
-    "senha": "sua_senha"
-  }
-  ```
-
-- **Acesso a Endpoints Protegidos:**
-
-  ```
-  Authorization: Bearer seu_token_jwt
-  ```
-
-- **Exemplo de requisição para `/clientes`:**
-
+- **Back-End:**  
+  Na pasta `Back`:
   ```bash
-  curl -X GET http://localhost:3000/clientes \
-    -H "Authorization: Bearer seu_token_jwt"
+  npm run dev
+  ```
+  A API estará em `http://localhost:3000`.
+
+- **Front-End:**  
+  Basta abrir os arquivos HTML da pasta `Front` no navegador.  
+  > **Atenção:** O front-end espera que a API esteja rodando em `localhost:3000`.
+
+---
+
+## Detalhes do Back-End
+
+### Rotas e Endpoints
+
+#### Clientes (`/clientes`)
+- `GET /clientes` - Lista todos (protegido, usa cache)
+- `GET /clientes/:id` - Detalha um cliente (protegido)
+- `POST /clientes` - Cria cliente (protegido, validação)
+- `PUT /clientes/:id` - Atualiza cliente (protegido, validação)
+- `DELETE /clientes/:id` - Remove cliente (protegido, invalida cache)
+
+#### Produtos (`/produtos`)
+- `GET /produtos` - Lista todos (protegido, usa cache)
+- `GET /produtos/:id` - Detalha um produto (protegido)
+- `POST /produtos` - Cria produto (protegido, validação)
+- `PUT /produtos/:id` - Atualiza produto (protegido, validação)
+- `DELETE /produtos/:id` - Remove produto (protegido, invalida cache)
+
+#### Usuários (`/usuarios`)
+- `GET /usuarios` - Lista todos (protegido)
+- `GET /usuarios/:id` - Detalha usuário (protegido)
+- `POST /usuarios` - Cria usuário (validação)
+- `PUT /usuarios/:id` - Atualiza usuário (protegido, validação)
+- `DELETE /usuarios/:id` - Remove usuário (protegido)
+
+#### Autenticação
+- `POST /login` - Login, retorna JWT
+- `POST /logout` - Logout, invalida JWT
+- `GET /protegido` - Exemplo de rota protegida
+
+### Cache
+
+- Implementado com NodeCache.
+- Respostas de listagem de clientes e produtos são armazenadas em cache para acelerar requisições.
+- Cache é invalidado automaticamente em operações de criação, atualização ou exclusão.
+
+### Autenticação JWT
+
+- Usuário faz login e recebe um token JWT.
+- Rotas protegidas exigem o header `Authorization: Bearer <token>`.
+- O middleware `verifyJWT` valida o token em cada requisição protegida.
+- Logout remove o token do banco/cache, invalidando o acesso.
+
+### Testes Automatizados
+
+- Testes para rotas de clientes, produtos, usuários e autenticação.
+- Localizados em `Back/testes/`.
+- Para rodar:
+  ```bash
+  npm test
   ```
 
 ---
 
-## Contribuição e Desenvolvimento Futuro
+## Detalhes do Front-End
 
-Este projeto está em constante evolução. Contribuições são bem-vindas! Algumas melhorias planejadas:
+- **clientes.html / clientes.js:**  
+  Lista, adiciona, edita e remove clientes. Usa autenticação JWT.  
+- **produtos.html / produtos.js:**  
+  Lista, adiciona, edita e remove produtos.  
+- **usuarios.html / usuarios.js:**  
+  Lista, adiciona, edita e remove usuários.  
+- **login.html:**  
+  Tela de login, armazena token JWT no localStorage.  
+- **logout.html:**  
+  Realiza logout, remove token do localStorage.  
+- **session.js:**  
+  Gerencia sessão do usuário (token).  
+- **style.css:**  
+  Estilização das páginas.
 
-- Integração completa do front-end com autenticação JWT
-- Implementação de refresh tokens
-- Adição de mais validações de dados
-- Melhoria na documentação da API
-- Implementação de rate limiting
-- Adição de logs mais detalhados
-
----
-
-## Licença
-
-Este projeto está sob a licença ISC.
+> **Observação:** O front-end depende do back-end estar rodando e do fluxo de autenticação JWT.

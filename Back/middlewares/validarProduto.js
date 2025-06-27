@@ -11,11 +11,13 @@ module.exports.validarProduto = (req, res, next) => {
     // Validação de descricao (agora obrigatória)
     if (!descricao || typeof descricao !== 'string' ||
             descricao.length < 3 || descricao.length > 255) {
-        erros.descricao = 'Descrição é obrigatória e deve ter entre 3 e 255 caracteres';
+        erros.descricao = 'Descrição é obrigatória e deve ' +
+            'ter entre 3 e 255 caracteres';
     }
 
     // Validação de preco
-    if (preco === undefined || preco === null || preco === "" || isNaN(Number(preco))) {
+    if (preco === undefined || preco === null || preco === '' ||
+        isNaN(Number(preco))) {
         erros.preco = 'Preço é obrigatório e deve ser um número válido';
     } else if (Number(preco) < 0) {
         erros.preco = 'Preço deve ser um número válido maior ou igual a zero';

@@ -38,7 +38,8 @@ exports.createProduto = async (req, res) => {
         const result = await produtosService.create(produto);
         // Invalida o cache da lista
         cache.del('"/produtos"');
-        console.log(chalk.magenta('[CACHE] Cache da lista de produtos invalidado após criação.'));
+        console.log(chalk.magenta(
+            '[CACHE] Cache da lista de produtos invalidado após criação.'));
         res.status(201).json(result);
     } catch (error) {
         console.log(chalk.red('[ERRO] Falha ao criar produto:', error.message));
@@ -62,7 +63,8 @@ exports.updateProduto = async (req, res) => {
         // Invalida o cache da lista e do item
         cache.del('"/produtos"');
         cache.del(`"/produtos/${id}"`);
-        console.log(chalk.magenta('[CACHE] Cache da lista e do produto individual invalidado após atualização.'));
+        console.log(chalk.magenta('[CACHE] Cache da lista e ' +
+            'do produto individual invalidado após atualização.'));
         res.status(201).json({
             message: 'Produto atualizado com sucesso!',
             result,
@@ -88,7 +90,8 @@ exports.deleteProduto = async (req, res) => {
         // Invalida o cache da lista e do item
         cache.del('"/produtos"');
         cache.del(`"/produtos/${id}"`);
-        console.log(chalk.magenta('[CACHE] Cache da lista e do produto individual invalidado após exclusão.'));
+        console.log(chalk.magenta('[CACHE] Cache da lista e do ' +
+            'produto individual invalidado após exclusão.'));
         res.status(201).json({
             message: 'Produto deletado com sucesso!',
             result,
